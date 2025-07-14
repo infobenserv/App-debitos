@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Débitos dos Clientes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Débitos dos Clientes</h1>
+  <form onsubmit="salvarDebito(event)">
+    <label>Cliente:</label>
+    <select id="clienteSelecionado" required></select>
+    <label>Valor (R$):</label>
+    <input type="number" id="valorDebito" required step="0.01"/>
+    <label>Data:</label>
+    <input type="date" id="dataDebito" required />
+    <label>Descrição:</label>
+    <input type="text" id="descricaoDebito" required />
+    <button type="submit">Salvar Débito</button>
+  </form>
+  <h2>Débitos do Cliente</h2>
+  <ul id="listaDebitos"></ul>
+  <script src="script.js"></script>
+</body>
+</html>

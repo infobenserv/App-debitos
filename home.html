@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Principal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Menu Principal</h1>
+  <div class="menu-blocos">
+    <button onclick="window.location.href='clientes.html'">Cadastrar Clientes</button>
+    <button onclick="window.location.href='debitos.html'">Registrar Débitos</button>
+    <button onclick="window.location.href='caixa.html'">Caixa</button>
+    <button onclick="window.location.href='recibo.html'">Recibos</button>
+    <button onclick="window.location.href='relatorio.html'">Relatório</button>
+    <button onclick="window.location.href='config.html'">Backup e Restauração</button>
+    <button onclick="sair()" style="background-color: #dc3545;">Sair</button>
+  </div>
+
+  <script>
+    function sair() {
+      // Aqui futuramente pode limpar dados de login real
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
