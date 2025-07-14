@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Relatório de Contas</title>
+  <link rel="stylesheet" href="style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <h1>Relatório de Débitos</h1>
+
+  <label>Filtrar por cliente:</label>
+  <select id="filtroCliente" onchange="mostrarRelatorio()">
+    <option value="">Todos os clientes</option>
+  </select>
+
+  <p><strong>Total Geral:</strong> R$ <span id="totalGeral">0.00</span></p>
+  <p><strong>Total Pago:</strong> R$ <span id="totalPago">0.00</span></p>
+  <p><strong>Total Pendente:</strong> R$ <span id="totalPendente">0.00</span></p>
+
+  <ul id="listaRelatorio"></ul>
+
+  <button onclick="gerarPDF()">Exportar Relatório (PDF)</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

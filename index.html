@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#007bff">
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("Service Worker registrado!"))
+        .catch(err => console.error("Erro ao registrar SW:", err));
+    }
+  </script>
+</head>
+<body>
+  <h1>Controle de Débitos</h1>
+  <form onsubmit="return login(event)">
+    <label>Usuário:</label>
+    <input type="text" id="usuario" required />
+    <label>Senha:</label>
+    <input type="password" id="senha" required />
+    <button type="submit">Entrar</button>
+  </form>
+  <script>
+    function login(e) {
+      e.preventDefault();
+      const user = document.getElementById("usuario").value;
+      const pass = document.getElementById("senha").value;
+
+      if (user === "admin" && pass === "1234") {
+        window.location.href = "home.html";
+      } else {
+        alert("Usuário ou senha inválidos!");
+      }
+    }
+  </script>
+</body>
+</html>
