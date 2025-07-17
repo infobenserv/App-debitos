@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Sistema de Rifas</title>
+  <style>
+    body {
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Sistema de Rifas</h2>
+
+  <input type="text" id="usuario" placeholder="Usuário" />
+  <input type="password" id="senha" placeholder="Senha" />
+
+  <button onclick="login()">Entrar</button>
+  <button onclick="cadastrar()">Criar Novo Usuário</button>
+</div>
+
+<script>
+  function login() {
+    const nome = document.getElementById("usuario").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+
+    const usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
+    const encontrado = usuarios.find(u => u.nome === nome && u.senha === senha);
+
+    if (encontrado) {
+      localStorage.setItem("usuario_logado", nome);
+      alert("Login realizado com sucesso!");
+      window.location.href = "cadastro_rifa.html";
+    } else {
+      alert("Usuário ou senha incorretos.");
+    }
+  }
+
+  function cadastrar() {
+    const nome = document.getElementById("usuario").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+
+    if (!nome || !senha) {
+      alert("Preencha nome e senha.");
+      return;
+    }
+
+    const usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]");
+
+    if (usuarios.some(u => u.nome === nome)) {
+      alert("Usuário já existe.");
+      return;
+    }
+
+    usuarios.push({ nome, senha });
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    alert("Usuário criado com sucesso!");
+  }
+</script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_DOMINIO.firebaseapp.com",
+    projectId: "SEU_ID",
+    storageBucket: "SEU_BUCKET",
+    messagingSenderId: "SEU_ID",
+    appId: "SUA_APP_ID"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+</script>
+</body>
+</html>
