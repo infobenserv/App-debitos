@@ -1,105 +1,41 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Login e Cadastro</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
-    .container { max-width: 360px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; margin-bottom: 10px; }
-    form { display: none; flex-direction: column; }
-    form.active { display: flex; }
-    input, button { padding: 12px; margin: 8px 0; font-size: 16px; width: 100%; }
-    button { background: #28a745; color: white; border: none; border-radius: 5px; }
-    .toggle-buttons { display: flex; justify-content: space-between; margin-bottom: 20px; }
-    .toggle-buttons button { flex: 1; background: #ccc; color: #333; border: none; padding: 10px; cursor: pointer; }
-    .toggle-buttons button.active { background: #28a745; color: white; }
-    #mensagem, #loginMsg { text-align: center; font-size: 14px; margin-top: 10px; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#007bff">
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("Service Worker registrado!"))
+        .catch(err => console.error("Erro ao registrar SW:", err));
+    }
+  </script>
 </head>
 <body>
-  <div class="container">
-    <div class="toggle-buttons">
-      <button id="btnLogin" class="active">Login</button>
-      <button id="btnCadastro">Cadastro</button>
-    </div>
-
-    <!-- Login Form -->
-    <form id="loginForm" class="active">
-      <h2>Login</h2>
-      <input type="email" name="email" placeholder="E-mail" required>
-      <input type="password" name="senha" placeholder="Senha" required>
-      <button type="submit">Entrar</button>
-      <p id="loginMsg"></p>
-    </form>
-
-    <!-- Cadastro Form -->
-    <form id="cadastroForm">
-      <h2>Cadastro</h2>
-      <input type="text" name="nome" placeholder="Nome" required>
-      <input type="email" name="email" placeholder="E-mail" required>
-      <input type="password" name="senha" placeholder="Senha" required>
-      <button type="submit">Cadastrar</button>
-      <p id="mensagem"></p>
-    </form>
-  </div>
-
+  <h1>Controle de Débitos</h1>
+  <form onsubmit="return login(event)">
+    <label>Usuário:</label>
+    <input type="text" id="usuario" required />
+    <label>Senha:</label>
+    <input type="password" id="senha" required />
+    <button type="submit">Entrar</button>
+  </form>
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyBcqsYxz4tmYTplbybaAl-J6yoWtxv602bA0EPhIdRNbwXhnkMWb8Huaf8VJRcjZQD/exec';
-
-    const btnLogin = document.getElementById('btnLogin');
-    const btnCadastro = document.getElementById('btnCadastro');
-    const loginForm = document.getElementById('loginForm');
-    const cadastroForm = document.getElementById('cadastroForm');
-
-    btnLogin.addEventListener('click', () => {
-      btnLogin.classList.add('active');
-      btnCadastro.classList.remove('active');
-      loginForm.classList.add('active');
-      cadastroForm.classList.remove('active');
-    });
-
-    btnCadastro.addEventListener('click', () => {
-      btnCadastro.classList.add('active');
-      btnLogin.classList.remove('active');
-      cadastroForm.classList.add('active');
-      loginForm.classList.remove('active');
-    });
-
-    cadastroForm.addEventListener('submit', e => {
+    function login(e) {
       e.preventDefault();
-      const form = new FormData(cadastroForm);
-      fetch(scriptURL, { method: 'POST', body: form })
-        .then(res => res.text())
-        .then(msg => {
-          document.getElementById('mensagem').textContent = msg;
-          cadastroForm.reset();
-        })
-        .catch(err => {
-          document.getElementById('mensagem').textContent = 'Erro ao cadastrar!';
-          console.error(err);
-        });
-    });
+      const user = document.getElementById("usuario").value;
+      const pass = document.getElementById("senha").value;
 
-    loginForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const email = loginForm.email.value;
-      const senha = loginForm.senha.value;
-      fetch(`${scriptURL}?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(senha)}`)
-        .then(res => res.text())
-        .then(resposta => {
-          if (resposta.trim() === 'autorizado') {
-            window.location.href = 'home.html';
-          } else {
-            document.getElementById('loginMsg').textContent = 'E-mail ou senha inválidos!';
-          }
-        })
-        .catch(err => {
-          document.getElementById('loginMsg').textContent = 'Erro ao conectar!';
-          console.error(err);
-        });
-    });
+      if (user === "admin" && pass === "1234") {
+        window.location.href = "home.html";
+      } else {
+        alert("Usuário ou senha inválidos!");
+      }
+    }
   </script>
 </body>
 </html>
