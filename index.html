@@ -2,44 +2,102 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Cadastro de Usuários</title>
+  <title>Login e Cadastro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
-    form { max-width: 350px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    input, button { display: block; margin: 10px 0; width: 100%; padding: 12px; font-size: 16px; }
-    button { background: green; color: white; border: none; cursor: pointer; border-radius: 5px; }
-    h2 { text-align: center; color: #333; }
-    #mensagem { text-align: center; color: green; margin-top: 10px; }
+    body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+    .container { max-width: 360px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; margin-bottom: 10px; }
+    form { display: none; flex-direction: column; }
+    form.active { display: flex; }
+    input, button { padding: 12px; margin: 8px 0; font-size: 16px; width: 100%; }
+    button { background: #28a745; color: white; border: none; border-radius: 5px; }
+    .toggle-buttons { display: flex; justify-content: space-between; margin-bottom: 20px; }
+    .toggle-buttons button { flex: 1; background: #ccc; color: #333; border: none; padding: 10px; cursor: pointer; }
+    .toggle-buttons button.active { background: #28a745; color: white; }
+    #mensagem, #loginMsg { text-align: center; font-size: 14px; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h2>Cadastro de Usuários</h2>
-  <form id="cadastroForm">
-    <input type="text" name="nome" placeholder="Nome" required>
-    <input type="email" name="email" placeholder="E-mail" required>
-    <input type="password" name="senha" placeholder="Senha" required>
-    <button type="submit">Cadastrar</button>
-  </form>
+  <div class="container">
+    <div class="toggle-buttons">
+      <button id="btnLogin" class="active">Login</button>
+      <button id="btnCadastro">Cadastro</button>
+    </div>
 
-  <p id="mensagem"></p>
+    <!-- Login Form -->
+    <form id="loginForm" class="active">
+      <h2>Login</h2>
+      <input type="email" name="email" placeholder="E-mail" required>
+      <input type="password" name="senha" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+      <p id="loginMsg"></p>
+    </form>
+
+    <!-- Cadastro Form -->
+    <form id="cadastroForm">
+      <h2>Cadastro</h2>
+      <input type="text" name="nome" placeholder="Nome" required>
+      <input type="email" name="email" placeholder="E-mail" required>
+      <input type="password" name="senha" placeholder="Senha" required>
+      <button type="submit">Cadastrar</button>
+      <p id="mensagem"></p>
+    </form>
+  </div>
 
   <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzIexwIjk4MPQvKBrJEaUozFQhIoHHA1I5fcQIxXRs5cIWDkn0452nyPmeLBbXodDJX/exec';
 
-    document.getElementById('cadastroForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const form = new FormData(e.target);
+    const btnLogin = document.getElementById('btnLogin');
+    const btnCadastro = document.getElementById('btnCadastro');
+    const loginForm = document.getElementById('loginForm');
+    const cadastroForm = document.getElementById('cadastroForm');
 
+    btnLogin.addEventListener('click', () => {
+      btnLogin.classList.add('active');
+      btnCadastro.classList.remove('active');
+      loginForm.classList.add('active');
+      cadastroForm.classList.remove('active');
+    });
+
+    btnCadastro.addEventListener('click', () => {
+      btnCadastro.classList.add('active');
+      btnLogin.classList.remove('active');
+      cadastroForm.classList.add('active');
+      loginForm.classList.remove('active');
+    });
+
+    cadastroForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const form = new FormData(cadastroForm);
       fetch(scriptURL, { method: 'POST', body: form })
-        .then(response => response.text())
+        .then(res => res.text())
         .then(msg => {
           document.getElementById('mensagem').textContent = msg;
-          e.target.reset();
+          cadastroForm.reset();
         })
-        .catch(error => {
+        .catch(err => {
           document.getElementById('mensagem').textContent = 'Erro ao cadastrar!';
-          console.error('Erro!', error.message);
+          console.error(err);
+        });
+    });
+
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = loginForm.email.value;
+      const senha = loginForm.senha.value;
+      fetch(`${scriptURL}?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(senha)}`)
+        .then(res => res.text())
+        .then(resposta => {
+          if (resposta.trim() === 'autorizado') {
+            window.location.href = 'home.html';
+          } else {
+            document.getElementById('loginMsg').textContent = 'E-mail ou senha inválidos!';
+          }
+        })
+        .catch(err => {
+          document.getElementById('loginMsg').textContent = 'Erro ao conectar!';
+          console.error(err);
         });
     });
   </script>
