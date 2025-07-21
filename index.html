@@ -2,40 +2,157 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#007bff">
-  <link rel="stylesheet" href="style.css" />
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js")
-        .then(() => console.log("Service Worker registrado!"))
-        .catch(err => console.error("Erro ao registrar SW:", err));
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Cadastro com Slide</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
     }
-  </script>
+
+    .container {
+      width: 350px;
+      height: 420px;
+      overflow: hidden;
+      position: relative;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      background: #fff;
+    }
+
+    .slides {
+      display: flex;
+      width: 100%; /* dois slides lado a lado */
+      height: 100%;
+      transform: translateX(0);
+      transition: transform 0.4s ease-in-out;
+    }
+
+    .slide {
+      width: 100%;
+      flex-shrink: 0;
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+    }
+
+    .link {
+      text-align: center;
+      color: #007BFF;
+      cursor: pointer;
+      margin-top: 10px;
+      display: block;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
 </head>
 <body>
-  <h1>Controle de Débitos</h1>
-  <form onsubmit="return login(event)">
-    <label>Usuário:</label>
-    <input type="text" id="usuario" required />
-    <label>Senha:</label>
-    <input type="password" id="senha" required />
-    <button type="submit">Entrar</button>
-  </form>
-  <script>
-    function login(e) {
-      e.preventDefault();
-      const user = document.getElementById("usuario").value;
-      const pass = document.getElementById("senha").value;
 
-      if (user === "admin" && pass === "1234") {
+  <div class="container">
+    <div class="slides" id="slides">
+      
+      <!-- Slide Login -->
+      <div class="slide" id="slide-login">
+        <h2>Login</h2>
+        <form id="form-login">
+          <input type="text" id="login-usuario" placeholder="Usuário" required>
+          <input type="password" id="login-senha" placeholder="Senha" required>
+          <button type="submit">Entrar</button>
+        </form>
+        <span class="link" onclick="mostrarCadastro()">Novo por aqui? Cadastre-se</span>
+      </div>
+
+      <!-- Slide Cadastro -->
+      <div class="slide" id="slide-cadastro">
+        <h2>Cadastro</h2>
+        <form id="form-cadastro">
+          <input type="text" id="cadastro-usuario" placeholder="Novo usuário" required>
+          <input type="password" id="cadastro-senha" placeholder="Nova senha" required>
+          <button type="submit">Cadastrar</button>
+        </form>
+        <span class="link" onclick="mostrarLogin()">Já tem conta? Fazer login</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const slides = document.getElementById("slides");
+    const formLogin = document.getElementById("form-login");
+    const formCadastro = document.getElementById("form-cadastro");
+
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+    function mostrarCadastro() {
+      slides.style.transform = "translateX(-100%)";
+    }
+
+    function mostrarLogin() {
+      slides.style.transform = "translateX(0)";
+    }
+
+    formCadastro.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const usuario = document.getElementById("cadastro-usuario").value.trim();
+      const senha = document.getElementById("cadastro-senha").value;
+
+      if (usuarios.find(u => u.usuario === usuario)) {
+        alert("Usuário já existe!");
+        return;
+      }
+
+      usuarios.push({ usuario, senha });
+      localStorage.setItem("usuarios", JSON.stringify(usuarios));
+      alert("Cadastro realizado com sucesso!");
+      formCadastro.reset();
+      mostrarLogin(); // Volta para o login após cadastro
+    });
+
+    formLogin.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const usuario = document.getElementById("login-usuario").value.trim();
+      const senha = document.getElementById("login-senha").value;
+
+      const usuarioValido = usuarios.find(u => u.usuario === usuario && u.senha === senha);
+
+      if (usuarioValido) {
+        localStorage.setItem("usuarioLogado", usuario);
         window.location.href = "home.html";
       } else {
         alert("Usuário ou senha inválidos!");
       }
-    }
+    });
   </script>
+
 </body>
 </html>
